@@ -1,0 +1,25 @@
+[package]
+name = "edt-down-for-me"
+version = "0.1.0"
+edition = "2021"
+description = "Compact Linux GUI that shows whether configured web properties are accessible"
+license = "MIT"
+authors = ["edt-down-for-me"]
+readme = "README.md"
+default-run = "edt-down-for-me"
+
+[dependencies]
+dirs = "6"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+slint = "1.17"
+surge-ping = "0.8"
+tokio = { version = "1", features = ["rt-multi-thread", "time", "net", "macros", "io-util"] }
+
+[build-dependencies]
+slint-build = "1.17"
+
+[profile.release]
+lto = true
+codegen-units = 1
+strip = true

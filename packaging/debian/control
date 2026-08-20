@@ -1,0 +1,12 @@
+Package: edt-down-for-me
+Version: 0.1.0
+Section: net
+Priority: optional
+Architecture: amd64
+Maintainer: edt-down-for-me contributors <edt-down-for-me@localhost>
+Depends: libc6, libfontconfig1
+Recommends: libxkbcommon0, libwayland-client0, libxcb1
+Description: Compact monitor for web property accessibility
+ A small Rust + Slint desktop app that pings configured hostnames and
+ IP addresses at a low rate, with TCP/HTTP fallback when ICMP is blocked,
+ and shows green/yellow/red/grey status dots.

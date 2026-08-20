@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Down for me?
+Comment=Show whether configured web properties are accessible
+Exec=edt-down-for-me
+Icon=edt-down-for-me
+Terminal=false
+Categories=Network;Monitor;Utility;
+StartupNotify=true
+Keywords=ping;uptime;status;network;

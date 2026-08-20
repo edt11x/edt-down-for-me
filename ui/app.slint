@@ -1,0 +1,150 @@
+import { Button, LineEdit, VerticalBox, HorizontalBox, ScrollView } from "std-widgets.slint";
+
+export struct SiteRow {
+    host: string,
+    status: int,
+}
+
+component StatusDot inherits Rectangle {
+    in property <int> status;
+    width: 8px;
+    height: 8px;
+    border-radius: 4px;
+    background: status == 1 ? #3dde72
+        : status == 2 ? #f5c542
+        : status == 3 ? #ff5c5c
+        : #8b909a;
+}
+
+component SiteLine inherits Rectangle {
+    in property <string> host;
+    in property <int> status;
+    callback remove();
+
+    height: 24px;
+    background: touch.has-hover ? #21262d : transparent;
+    border-radius: 4px;
+
+    touch := TouchArea {
+        width: parent.width;
+        height: parent.height;
+    }
+
+    HorizontalLayout {
+        padding-left: 6px;
+        padding-right: 2px;
+        spacing: 8px;
+        alignment: stretch;
+
+        VerticalLayout {
+            alignment: center;
+            width: 8px;
+            StatusDot { status: root.status; }
+        }
+
+        Text {
+            text: root.host;
+            color: #e6edf3;
+            font-size: 12px;
+            vertical-alignment: center;
+            overflow: elide;
+            horizontal-stretch: 1;
+        }
+
+        remove-btn := TouchArea {
+            width: 20px;
+            height: 20px;
+            mouse-cursor: pointer;
+            clicked => { root.remove(); }
+
+            Rectangle {
+                border-radius: 4px;
+                background: remove-btn.has-hover ? #3d1f24 : transparent;
+                Text {
+                    text: "×";
+                    color: remove-btn.has-hover ? #ff7b72 : #8b949e;
+                    font-size: 14px;
+                    horizontal-alignment: center;
+                    vertical-alignment: center;
+                    width: parent.width;
+                    height: parent.height;
+                }
+            }
+        }
+    }
+}
+
+export component AppWindow inherits Window {
+    in-out property <[SiteRow]> sites: [];
+    in-out property <string> new-host: "";
+    in-out property <string> notice: "";
+    in property <string> app-version: "0.1.0";
+    callback add-site();
+    callback remove-site(int);
+
+    title: "Down for me? " + root.app-version;
+    icon: @image-url("../assets/edt-down-for-me.png");
+    default-font-size: 12px;
+    default-font-family: "Inter, Noto Sans, DejaVu Sans, sans-serif";
+    background: #0d1117;
+    preferred-width: 268px;
+    preferred-height: 260px;
+    min-width: 220px;
+    min-height: 180px;
+
+    VerticalBox {
+        padding: 8px;
+        spacing: 6px;
+
+        Text {
+            text: "Web properties";
+            color: #8b949e;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        ScrollView {
+            vertical-stretch: 1;
+            viewport-width: self.width;
+            VerticalLayout {
+                alignment: start;
+                spacing: 1px;
+                padding-right: 2px;
+                for site[index] in root.sites: SiteLine {
+                    width: 100%;
+                    host: site.host;
+                    status: site.status;
+                    remove => { root.remove-site(index); }
+                }
+            }
+        }
+
+        Text {
+            text: root.notice;
+            color: #f5c542;
+            font-size: 10px;
+            height: 12px;
+            overflow: elide;
+        }
+
+        HorizontalBox {
+            padding: 0px;
+            spacing: 6px;
+
+            input := LineEdit {
+                horizontal-stretch: 1;
+                placeholder-text: "host or IP";
+                text <=> root.new-host;
+                font-size: 12px;
+                accepted => { root.add-site(); }
+            }
+
+            Button {
+                text: "Add";
+                primary: true;
+                enabled: root.new-host != "";
+                clicked => { root.add-site(); }
+            }
+        }
+    }
+}

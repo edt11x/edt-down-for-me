@@ -1,0 +1,4 @@
+# Snyk policy: this workspace is trusted for scans.
+version: v1.25.0
+ignore: {}
+patch: {}
